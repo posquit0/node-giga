@@ -1,0 +1,10 @@
+coverage
+test
+.*.log
+.circleci
+.coveralls.yml
+.editorconfig
+.eslintrc*
+.npmignore
+.tern*
+.travis.yml
