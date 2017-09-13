@@ -49,7 +49,7 @@
   "devDependencies": {
     "coveralls": "^2.13.1",
     "eslint": "^4.5.0",
-    "eslint-config-omnious": "^0.2.3",
+    "eslint-config-omnious": "^0.3.0",
     "jest": "^21.0.2"
   }
 }
