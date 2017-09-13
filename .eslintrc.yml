@@ -1,5 +1,2 @@
 extends:
   - 'omnious'
-
-parserOptions:
-  sourceType: 'module'
