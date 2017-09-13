@@ -30,7 +30,8 @@
   },
   "files": [
     "index.js",
-    "lib/"
+    "lib/",
+    "storages/"
   ],
   "main": "index",
   "scripts": {
