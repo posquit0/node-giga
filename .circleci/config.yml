@@ -1,0 +1,30 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      # Primary container
+      - image: circleci/node:8.5.0
+    environment:
+      TZ: Asia/Seoul
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: yarn && yarn add -D jest-junit
+      - save_cache:
+          key: dependencies-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Lint and Test
+          command: |
+            mkdir -p ~/reports
+            yarn lint -- --format junit --output-file ~/reports/eslint.xml
+            JEST_JUNIT_OUTPUT=~/reports/test-results.xml yarn test:coverage -- --coverageDirectory ~/reports --testResultsProcessor ./node_modules/jest-junit
+      - store_test_results:
+          path: ~/reports
+      - store_artifacts:
+          path: ~/reports
