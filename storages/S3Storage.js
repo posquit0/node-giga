@@ -1,5 +1,6 @@
 'use strict';
 
+const url = require('url');
 const S3 = require('aws-sdk/clients/s3');
 
 
@@ -18,7 +19,14 @@ class S3Storage {
       apiVersion: '2006-03-01',
       params: {}
     }, options);
+    this.protocol = 's3';
     this.bucket = this.options.bucket;
+    const baseUrl = url.format({
+      protocol: this.protocol,
+      host: this.bucket,
+      slashes: true
+    });
+    this.baseUrl = baseUrl.replace(/([^/])$/, '$1/');
     this.options.params['Bucket'] = this.bucket;
     this.client = new S3(this.options);
   }

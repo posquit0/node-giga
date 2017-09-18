@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 
 function mkdirp(dirPath, options = {}) {
@@ -40,7 +41,13 @@ class LocalStorage {
       root: path.join(process.cwd(), '.storage')
     }, options);
 
+    this.protocol = 'file';
     this.root = path.normalize(this.options.root);
+    const baseUrl = url.format({
+      protocol: this.protocol,
+      host: this.root
+    });
+    this.baseUrl = baseUrl.replace(/([^/])$/, '$1/');
   }
 
   /**
