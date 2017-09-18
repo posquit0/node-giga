@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { PassThrough } = require('stream');
 
 
 function mkdirp(dirPath, options = {}) {
@@ -45,37 +44,45 @@ class LocalStorage {
   }
 
   /**
-   * Create a stream to read the data from
+   * Create a readable stream to download the data from
    *
    * @param {string} filePath
    * @param {object} options
-   * @returns {stream}
+   * @returns {Promise}
    */
-  createReadStream(filePath, options = {}) {
+  download(filePath, options = {}) {
     const target = path.join(this.root, path.normalize(filePath));
-    return fs.createReadStream(target, options);
+    return new Promise((resolve, reject) => {
+      try {
+        const src = fs.createReadStream(target, options);
+        resolve(src);
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
 
   /**
-   * Create a stream to write the data to
+   * Upload the data as a readable stream to
    *
+   * @param {stream} src
    * @param {string} filePath
    * @param {object} options
-   * @returns {stream}
+   * @returns {Promise}
    */
-  createWriteStream(filePath, options = {}) {
+  upload(src, filePath, options = {}) {
     const target = path.join(this.root, path.normalize(filePath));
-    const writeStream = new PassThrough();
 
     // Ensure the path is exists
-    mkdirp(path.dirname(target), { mode: 0o755 })
+    return mkdirp(path.dirname(target), { mode: 0o755 })
       .then(() => {
-        const fileStream = fs.createWriteStream(target, options);
-        fileStream.once('error', err => writeStream.emit('error', err));
-        return writeStream.pipe(fileStream);
-      })
-      .catch(err => writeStream.emit('error', err));
-    return writeStream;
+        const dst = fs.createWriteStream(target, options);
+        return new Promise((resolve, reject) => {
+          src.pipe(dst)
+            .once('error', reject)
+            .on('finish', resolve);
+        });
+      });
   }
 
   /**

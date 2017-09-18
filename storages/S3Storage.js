@@ -1,6 +1,5 @@
 'use strict';
 
-const { PassThrough } = require('stream');
 const S3 = require('aws-sdk/clients/s3');
 
 
@@ -25,43 +24,41 @@ class S3Storage {
   }
 
   /**
-   * Create a stream to read the data from
+   * Create a readable stream to download the data from
    *
    * @param {string} filePath
    * @param {object} options
-   * @returns {stream}
+   * @returns {Promise}
    */
-  createReadStream(filePath, options = {}) {
+  download(filePath, options = {}) {
     const params = Object.assign({
       'Bucket': this.bucket,
       'Key': filePath
     }, options);
     const request = this.client.getObject(params);
-    const readStream = request.createReadStream();
+    const src = request.createReadStream();
 
-    request.on('error', err => readStream.emit('error', err));
-    return readStream;
+    return new Promise((resolve, reject) => {
+      request.on('error', reject);
+      return resolve(src);
+    });
   }
 
   /**
-   * Create a stream to write the data to
+   * Upload the data as a readable stream to
    *
+   * @param {stream} src
    * @param {string} filePath
    * @param {object} options
-   * @returns {stream}
+   * @returns {Promise}
    */
-  createWriteStream(filePath, options = {}) {
-    const writeStream = new PassThrough();
+  upload(src, filePath, options = {}) {
     const params = Object.assign({
       'Bucket': this.bucket,
       'Key': filePath,
-      'Body': writeStream
+      'Body': src
     }, options);
-    this.client.upload(params, err => {
-      if (err)
-        writeStream.emit('error', err);
-    });
-    return writeStream;
+    return this.client.upload(params).promise();
   }
 
   /**
@@ -69,7 +66,7 @@ class S3Storage {
    *
    * @param {string} filePath
    * @param {object} options
-   * @returns {promise}
+   * @returns {Promise}
    */
   remove(filePath) {
     const params = {
