@@ -1,6 +1,6 @@
 {
   "name": "giga",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Easy streaming upload and download for storages(File System, AWS S3)",
   "license": "MIT",
   "author": "Claud D. Park <posquit0.bj@gmail.com> (http://www.posquit0.com)",
