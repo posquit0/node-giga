@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('giga');
 const url = require('url');
 const S3 = require('aws-sdk/clients/s3');
 
@@ -29,6 +30,8 @@ class S3Storage {
     this.baseUrl = baseUrl.replace(/([^/])$/, '$1/');
     this.options.params['Bucket'] = this.bucket;
     this.client = new S3(this.options);
+
+    debug('[storage-s3] create an instance');
   }
 
   /**
@@ -45,6 +48,7 @@ class S3Storage {
     }, options);
     const request = this.client.getObject(params);
     const src = request.createReadStream();
+    debug(`[storage-s3:download] Bucket=${params['Bucket']} Key=${params['Key']}`);
 
     return new Promise((resolve, reject) => {
       request.on('error', reject);
@@ -66,6 +70,8 @@ class S3Storage {
       'Key': filePath,
       'Body': src
     }, options);
+    debug(`[storage-s3:upload] Bucket=${params['Bucket']} Key=${params['Key']}`);
+
     return this.client.upload(params).promise();
   }
 
@@ -82,6 +88,7 @@ class S3Storage {
       'Key': filePath
     };
     const request = this.client.deleteObject(params).promise();
+    debug(`[storage-s3:remove] Bucket=${params['Bucket']} Key=${params['Key']}`);
     return request.then(() => filePath);
   }
 }

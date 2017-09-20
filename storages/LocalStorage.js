@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('giga');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
@@ -48,6 +49,8 @@ class LocalStorage {
       host: this.root
     });
     this.baseUrl = baseUrl.replace(/([^/])$/, '$1/');
+
+    debug('[storage-local] create an instance');
   }
 
   /**
@@ -62,6 +65,7 @@ class LocalStorage {
     return new Promise((resolve, reject) => {
       try {
         const src = fs.createReadStream(target, options);
+        debug(`[storage-local:download] path=${target}`);
         resolve(src);
       } catch (err) {
         reject(err);
@@ -84,6 +88,8 @@ class LocalStorage {
     return mkdirp(path.dirname(target), { mode: 0o755 })
       .then(() => {
         const dst = fs.createWriteStream(target, options);
+        debug(`[storage-local:upload] path=${target}`);
+
         return new Promise((resolve, reject) => {
           src.pipe(dst)
             .once('error', reject)
@@ -102,6 +108,7 @@ class LocalStorage {
   remove(filePath) {
     const target = path.join(this.root, path.normalize(filePath));
     return new Promise((resolve, reject) => {
+      debug(`[storage-local:remove] path=${target}`);
       return fs.unlink(target, err => err ? reject(err) : resolve(target));
     });
   }
