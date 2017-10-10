@@ -39,7 +39,6 @@
 
 ## Installation
 
-
 ```bash
 # NPM
 $ npm install --save giga
