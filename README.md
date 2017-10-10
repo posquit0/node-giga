@@ -39,6 +39,8 @@
 
 ## Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/posquit0/node-giga.svg)](https://greenkeeper.io/)
+
 ```bash
 # NPM
 $ npm install --save giga
