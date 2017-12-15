@@ -33,9 +33,9 @@ function mkdirp(dirPath, options = {}) {
  */
 class LocalStorage {
   /**
-   * Create a new storage instance
+   * Create a new storage instance.
    *
-   * @param {object} options
+   * @param {Object} [options={}] - The configuration of LocalStorage.
    */
   constructor(options = {}) {
     this.options = Object.assign({
@@ -54,10 +54,10 @@ class LocalStorage {
   }
 
   /**
-   * Create a readable stream to download the data from
+   * Create a readable stream to download the data from.
    *
-   * @param {string} filePath
-   * @param {object} options
+   * @param {string} filePath - The file path to download.
+   * @param {Object} [options={}] - The download options.
    * @returns {Promise}
    */
   download(filePath, options = {}) {
@@ -74,11 +74,11 @@ class LocalStorage {
   }
 
   /**
-   * Upload the data as a readable stream to
+   * Upload the data as a readable stream to.
    *
-   * @param {stream} src
-   * @param {string} filePath
-   * @param {object} options
+   * @param {stream.Readable} src - The source stream.
+   * @param {string} filePath - The file path to upload.
+   * @param {Object} [options={}] - The upload options.
    * @returns {Promise}
    */
   upload(src, filePath, options = {}) {
@@ -99,11 +99,10 @@ class LocalStorage {
   }
 
   /**
-   * Remove the data from storage
+   * Remove the data from storage.
    *
-   * @param {string} filePath
-   * @param {object} options
-   * @returns {promise}
+   * @param {string} filePath - The file path to remove.
+   * @returns {Promise}
    */
   remove(filePath) {
     const target = path.join(this.root, path.normalize(filePath));
