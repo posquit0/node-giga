@@ -32,8 +32,8 @@ describe('LocalStorage', () => {
 
   describe('upload(src, filePath, options)', () => {
     it('should return `undefined` when upload is finished', async () => {
-      const filename = 'package.json';
-      const srcPath = path.join(process.cwd(), filename);
+      const filename = 'test-upload';
+      const srcPath = path.join(process.cwd(), 'package.json');
       const src = fs.createReadStream(srcPath);
       expect(storage.upload(src, filename)).resolves.toBe();
     });
