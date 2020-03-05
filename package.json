@@ -43,7 +43,7 @@
     "lint:test": "eslint test"
   },
   "dependencies": {
-    "aws-sdk": "^2.170.0",
+    "aws-sdk": "^2.634.0",
     "debug": "^4.0.0",
     "uuid": "^3.1.0"
   },
