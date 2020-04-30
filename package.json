@@ -45,7 +45,7 @@
   "dependencies": {
     "aws-sdk": "^2.170.0",
     "debug": "^4.0.0",
-    "uuid": "^3.1.0"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
